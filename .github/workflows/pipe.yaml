@@ -1,9 +1,7 @@
 name: CI/CD Deploy Hello World to Tomcat
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy:
