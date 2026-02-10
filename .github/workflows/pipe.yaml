@@ -22,6 +22,9 @@ jobs:
     - name: Build WAR
       run: mvn clean package
 
+    - name: Verify WAR file exists
+      run: ls -l target
+
     - name: Copy WAR to EC2
       uses: appleboy/scp-action@v0.1.7
       with:
