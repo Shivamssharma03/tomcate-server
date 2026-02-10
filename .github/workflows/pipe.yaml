@@ -43,6 +43,6 @@ jobs:
         script: |
           sudo systemctl stop tomcat
           sudo rm -rf /opt/tomcat/webapps/hello*
-          sudo mv /tmp/helloworld-1.1.war /opt/tomcat/webapps/
+          sudo mv /tmp//target/helloworld-1.1.war /opt/tomcat/webapps/
           sudo chown tomcat:tomcat /opt/tomcat/webapps/helloworld-1.1.war
           sudo systemctl start tomcat
