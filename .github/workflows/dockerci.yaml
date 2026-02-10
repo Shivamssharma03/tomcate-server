@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: [self-hosted, docker, pro]
+    runs-on: [self-hosted, docker, linux]
 
     env:
       AWS_REGION: us-east-1
