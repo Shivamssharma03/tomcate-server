@@ -1,0 +1,45 @@
+name: CI/CD Deploy Hello World to Tomcat
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+
+    - name: Build WAR
+      run: mvn clean package
+
+    - name: Copy WAR to EC2
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        source: "target/hello.war"
+        target: "/tmp"
+
+    - name: Deploy to Tomcat
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          sudo systemctl stop tomcat
+          sudo rm -rf /opt/tomcat/webapps/hello*
+          sudo mv /tmp/hello.war /opt/tomcat/webapps/
+          sudo chown tomcat:tomcat /opt/tomcat/webapps/hello.war
+          sudo systemctl start tomcat
