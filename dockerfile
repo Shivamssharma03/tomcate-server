@@ -1,14 +1,11 @@
-# Use a lightweight official OpenJDK image
-FROM eclipse-temurin:17-jre-alpine
+FROM tomcat:9.0-jdk17-temurin
 
-# Set working directory
-WORKDIR /app
+# Remove default Tomcat applications
+RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copy the JAR created by CI
-COPY target/*.jar app.jar
+# Copy WAR file as ROOT application
+COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
 
-# Expose application port
 EXPOSE 8080
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["catalina.sh", "run"]
