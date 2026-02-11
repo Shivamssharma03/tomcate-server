@@ -77,3 +77,13 @@ jobs:
             --name tomcat \
             -p 80:8080 \
             $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
+
+      - name: Cleanup
+        if: always()
+        run: docker system prune -af
+
+      - name: Cleanup workspace
+        if: always()
+        run: rm -rf "$GITHUB_WORKSPACE"/*
+
+
