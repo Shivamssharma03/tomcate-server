@@ -10,10 +10,10 @@ permissions:
 
 jobs:
   build:
-    runs-on: [self-hosted, docker, linux]
+    runs-on: ubuntu-latest
 
     env:
-      AWS_REGION: us-east-1
+      AWS_REGION: eu-north-1
       ECR_REPO: rtc/tomcat-warimg
       ACCOUNT_ID: ${{ vars.ACCOUNT_ID }}
       IMAGE_TAG: ${{ github.run_number }}
@@ -61,29 +61,29 @@ jobs:
           docker push \
           $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
 
-      - name: Stop old container (if exists)
-        run: |
-          docker stop tomcat || true
-          docker rm tomcat || true
+      # - name: Stop old container (if exists)
+      #   run: |
+      #     docker stop tomcat || true
+      #     docker rm tomcat || true
 
-      - name: Pull latest image from ECR
-        run: |
-          docker pull \
-          $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
+      # - name: Pull latest image from ECR
+      #   run: |
+      #     docker pull \
+      #     $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
 
-      - name: Run container in detached mode
-        run: |
-          docker run -d \
-            --name tomcat \
-            -p 80:8080 \
-            $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
+      # - name: Run container in detached mode
+      #   run: |
+      #     docker run -d \
+      #       --name tomcat \
+      #       -p 80:8080 \
+      #       $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO:$IMAGE_TAG
 
-      - name: Cleanup
-        if: always()
-        run: docker system prune -af
+      # - name: Cleanup
+      #   if: always()
+      #   run: docker system prune -af
 
-      - name: Cleanup workspace
-        if: always()
-        run: rm -rf "$GITHUB_WORKSPACE"/*
+      # - name: Cleanup workspace
+      #   if: always()
+      #   run: rm -rf "$GITHUB_WORKSPACE"/*
 
 
